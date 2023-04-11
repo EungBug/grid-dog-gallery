@@ -1,0 +1,28 @@
+h1 {
+  text-align: center;
+  margin: 50px 0;
+}
+
+.container {
+  width: 70%;
+  visibility: hidden;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 10px;
+  gap: 10px;
+  margin: 0 auto;
+  display: grid;
+}
+
+.container.show {
+  visibility: visible;
+}
+
+.grid-item {
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+}
+
+/*# sourceMappingURL=index.e5980c4e.css.map */
