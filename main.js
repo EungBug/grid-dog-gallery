@@ -1,9 +1,11 @@
 // import axios from 'axios';
 
 const GALLERY_COUNT = 15;
-let images = [];
 
 const containerEl = document.querySelector('.container');
+const loadingBarEl = document.querySelector('.loading-bar');
+
+let isLoading = true;
 
 function setMasonryLayout() {
   let items = containerEl.querySelectorAll('.grid-item');
@@ -13,7 +15,6 @@ function setMasonryLayout() {
     const rowSpan = Math.floor((item.querySelector('.image').offsetHeight + rowGap) / (rowHeight + rowGap));
     item.style.gridRowEnd = 'span ' + rowSpan;
   });
-  containerEl.classList.add('show');
 }
 
 async function initGallery() {
@@ -33,7 +34,7 @@ async function initGallery() {
 }
 
 // Promise class를 사용해서 비동기 처리
-function initGalleryImages() {
+function initGalleryImages(images) {
   return new Promise(resolve => {
     console.log(images);
     images.forEach(function (image) {
@@ -59,17 +60,27 @@ async function requestDogImages() {
 
 // fetch, Promise 사용
 function requestDogImagesWithFetch() {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     fetch(`https://dog.ceo/api/breeds/image/random/${GALLERY_COUNT}`, {
       method: 'GET'
     })
       .then(res => res.json())
       .then(res => {
-        images = res.message;
-        resolve();
+        resolve(res.message);
+      })
+      .catch(error => {
+        reject(error);
       });
   });
 }
 
 // initGallery();
-requestDogImagesWithFetch().then(initGalleryImages).then(setMasonryLayout);
+requestDogImagesWithFetch()
+  .then(images => initGalleryImages(images))
+  .then(setMasonryLayout)
+  .catch(error => console.log(`error 발생 >>> ${error}`))
+  .finally(() => {
+    isLoading = false;
+    containerEl.classList.add('show');
+    loadingBarEl.classList.add('hide');
+  });
