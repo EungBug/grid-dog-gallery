@@ -1,11 +1,12 @@
-// import axios from 'axios';
+import axios from 'axios';
 
 const GALLERY_COUNT = 15;
 
 const containerEl = document.querySelector('.container');
 const loadingBarEl = document.querySelector('.loading-bar');
 
-let isLoading = true;
+// 피드백 반영 > loading 같은 경우 처음부터 돌리는 것이 아닌 fetch가 시작 됐을 때 돌리는 것이 유지보수에 더 효과적임.
+let isLoading = false;
 
 function setMasonryLayout() {
   let items = containerEl.querySelectorAll('.grid-item');
@@ -60,8 +61,11 @@ async function requestDogImages() {
 
 // fetch, Promise 사용
 function requestDogImagesWithFetch() {
+  // 데이터를 가져올 때 로딩 돌리기
+  loadingBarEl.classList.toggle('show');
+
   return new Promise((resolve, reject) => {
-    fetch(`https://dog.ceo/api/breeds/image/random/${GALLERY_COUNT}`, {
+    fetch(`https://dsog.ceo/api/breeds/image/random/${GALLERY_COUNT}`, {
       method: 'GET'
     })
       .then(res => res.json())
@@ -78,9 +82,12 @@ function requestDogImagesWithFetch() {
 requestDogImagesWithFetch()
   .then(images => initGalleryImages(images))
   .then(setMasonryLayout)
-  .catch(error => console.log(`error 발생 >>> ${error}`))
+  .catch(error => {
+    console.log(`error 발생 >>> ${error}`);
+    alert('사진을 불러오는 데 실패했습니다.');
+  })
   .finally(() => {
     isLoading = false;
     containerEl.classList.add('show');
-    loadingBarEl.classList.add('hide');
+    loadingBarEl.classList.toggle('show');
   });

@@ -35,15 +35,15 @@ h1 {
   top: 0;
   bottom: 0;
   font-size: 30px;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
 }
 
-.loading-bar.hide {
-  display: none;
+.loading-bar.show {
+  display: flex;
 }
 
 .fa-spinner {
